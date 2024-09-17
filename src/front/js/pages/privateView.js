@@ -18,3 +18,5 @@ return (
     </div>
 );
 };
+
+export default PrivateView;
