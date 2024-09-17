@@ -33,3 +33,17 @@ def login():
         return jsonify({"msg": "Usuario o contraseña incorrecto"})
     access_token = create_access_token(identity=user.serialize())
     return jsonify ({"token":access_token})
+
+@api.route('/register', methods=['POST'])
+def register():
+    body = request.json
+    if not body.get("email") or not body.get("password"):
+        return jsonify({"msg": "Faltan datos"}), 400
+    if User.query.filter_by(email=body["email"]).first():
+        return jsonify({"msg": "El usuario ya existe"}), 400
+    try:
+        new_user = User.create_user(email=body["email"], password=body["password"])
+        return jsonify({"msg": "Usuario creado exitosamente"}), 201
+    except Exception as e:
+        return jsonify({"msg": str(e)}), 500
+
